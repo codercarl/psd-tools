@@ -193,7 +193,9 @@ class UnknownOSType(ValueError):
 def decode_raw(key, fp):
     # This is the only thing we know about.
     if key == b'EngineData':
-        raw = fp.read()
+        # The first unsigned int determines the size of the enginedata
+        size = read_fmt("I", fp)[0]
+        raw = fp.read(size)        
         return decode_enginedata(raw)
 
     # XXX: The spec says variable data without a length ._.
